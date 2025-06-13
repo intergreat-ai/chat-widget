@@ -373,7 +373,7 @@
         </div>
     `;
     */
-    const newConversationHTML = `
+    const chatInterfaceHTML = `
         <div class="brand-header">
             <img src="${config.branding.logo}" alt="${config.branding.name}">
             <span>${config.branding.name}</span>
