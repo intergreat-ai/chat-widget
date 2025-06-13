@@ -10,6 +10,22 @@
             font-family: 'Geist Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
 
+        .n8n-chat-widget .new-conversation {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            width: 100%;
+            max-width: 300px;
+            box-sizing: border-box;
+            padding: 0 0 12px 0;
+        }
+
+        .n8n-chat-widget .chat-text-input,
+        .n8n-chat-widget .new-chat-btn {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
         .n8n-chat-widget .chat-container {
             position: fixed;
             bottom: 20px;
@@ -183,22 +199,6 @@
             border-top: 1px solid rgba(133, 79, 255, 0.1);
             display: flex;
             gap: 8px;
-        }
-
-        .n8n-chat-widget .new-conversation {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            width: 100%;
-            max-width: 300px;
-            box-sizing: border-box;
-            padding: 0 0 12px 0;
-        }
-
-        .n8n-chat-widget .chat-text-input,
-        .n8n-chat-widget .new-chat-btn {
-            width: 100%;
-            box-sizing: border-box;
         }
 
         .n8n-chat-widget .chat-text-input {
