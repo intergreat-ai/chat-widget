@@ -354,7 +354,7 @@
             <p class="response-text">${config.branding.responseTimeText}</p>
         </div>
     `;
-    /*
+
     const chatInterfaceHTML = `
         <div class="chat-interface">
             <div class="brand-header">
@@ -372,22 +372,7 @@
             </div>
         </div>
     `;
-    */
-    const chatInterfaceHTML = `
-        <div class="brand-header">
-            <img src="${config.branding.logo}" alt="${config.branding.name}">
-            <span>${config.branding.name}</span>
-            <button class="close-button">×</button>
-        </div>
-        <div class="new-conversation">
-            <h2 class="welcome-text">${config.branding.welcomeText}</h2>
-            <input id="user-first-name" placeholder="First Name" style="margin-bottom: 8px; width: 100%; padding: 12px; border-radius: 6px;" />
-            <input id="user-last-name" placeholder="Last Name" style="margin-bottom: 8px; width: 100%; padding: 12px; border-radius: 6px;" />
-            <input id="user-email" type="email" placeholder="Email" style="margin-bottom: 16px; width: 100%; padding: 12px; border-radius: 6px;" />
-            <button class="new-chat-btn" id="start-chat-btn">Send us a message</button>
-            <p class="response-text">${config.branding.responseTimeText}</p>
-        </div>
-    `;
+
 
     chatContainer.innerHTML = newConversationHTML + chatInterfaceHTML;
     // Create toggle button
