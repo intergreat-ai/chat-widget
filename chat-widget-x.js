@@ -476,55 +476,37 @@
     async function startNewConversation() {
         currentSessionId = generateUUID();
 
-        const initData = [{
-            action: "loadPreviousSession",
+        const messageData = {
+            action: "sendMessage",
             sessionId: currentSessionId,
             route: config.webhook.route,
+            chatInput: "start",
             metadata: {
             userId: config.userInfo.email,
             name: `${config.userInfo.firstName} ${config.userInfo.lastName}`,
             email: config.userInfo.email
             }
-        }];
+        };
 
         try {
-            // 1. Load previous session
             const response = await fetch(config.webhook.url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(initData)
-            });
-            const responseData = await response.json(); // ✅ move here
-
-            // 2. Fire hidden message with metadata
-            await fetch(config.webhook.url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                action: "sendMessage",
-                sessionId: currentSessionId,
-                route: config.webhook.route,
-                chatInput: "__init__",
-                metadata: {
-                userId: config.userInfo.email,
-                name: `${config.userInfo.firstName} ${config.userInfo.lastName}`,
-                email: config.userInfo.email
-                }
-            })
+            body: JSON.stringify(messageData)
             });
 
-            // 3. Show UI
+            const data = await response.json();
+            const msg = Array.isArray(data) ? data[0] : data;
+
             chatContainer.querySelector('.brand-header').style.display = 'none';
             chatContainer.querySelector('.new-conversation').style.display = 'none';
             chatInterface.classList.add('active');
 
-            const msg = Array.isArray(responseData) ? responseData[0] : responseData;
             const botMessageDiv = document.createElement('div');
             botMessageDiv.className = 'chat-message bot';
             botMessageDiv.textContent = msg.output || '';
             messagesContainer.appendChild(botMessageDiv);
 
-            // Buttons if needed
             if (msg.options && Array.isArray(msg.options)) {
             const buttonWrapper = document.createElement('div');
             buttonWrapper.style.display = 'flex';
