@@ -186,7 +186,9 @@
         }
 
         .n8n-chat-widget .chat-text-input {
+            display: block;
             width: 100%;
+            box-sizing: border-box;
             padding: 12px;
             border: 1px solid rgba(133, 79, 255, 0.2);
             border-radius: 8px;
