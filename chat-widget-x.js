@@ -437,24 +437,24 @@
         const last = chatContainer.querySelector('#user-last-name').value.trim();
         const email = chatContainer.querySelector('#user-email').value.trim();
         if (!first || !last || !email.includes('@')) {
-        const error = document.createElement('div');
-        error.className = 'chat-error';
-        error.textContent = '⚠️ Please fill out all fields with a valid email.';
-        error.style.background = '#ffeaea';
-        error.style.color = '#a10000';
-        error.style.border = '1px solid #e0a1a1';
-        error.style.borderRadius = '8px';
-        error.style.padding = '10px';
-        error.style.margin = '8px 0';
-        error.style.fontSize = '14px';
-        error.style.textAlign = 'center';
+            const error = document.createElement('div');
+            error.className = 'chat-error';
+            error.textContent = '⚠️ Please fill out all fields with a valid email.';
+            error.style.background = '#ffeaea';
+            error.style.color = '#a10000';
+            error.style.border = '1px solid #e0a1a1';
+            error.style.borderRadius = '8px';
+            error.style.padding = '10px';
+            error.style.margin = '8px 0';
+            error.style.fontSize = '14px';
+            error.style.textAlign = 'center';
 
-        const form = chatContainer.querySelector('.new-conversation');
-        form.insertBefore(error, form.querySelector('p.response-text'));
-        setTimeout(() => {
-            error.remove();
-        }, 6000);
-        return;
+            const form = chatContainer.querySelector('.new-conversation');
+            form.insertBefore(error, form.querySelector('p.response-text'));
+            /*setTimeout(() => {
+                error.remove();
+            }, 6000);*/
+            return;
         }
         config.userInfo = { firstName: first, lastName: last, email };
         startNewConversation();
