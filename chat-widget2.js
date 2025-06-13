@@ -373,7 +373,7 @@
         </div>
     `;
     */
-    const chatInterfaceHTML = `
+    const newConversationHTML = `
         <div class="brand-header">
             <img src="${config.branding.logo}" alt="${config.branding.name}">
             <span>${config.branding.name}</span>
@@ -406,8 +406,8 @@
     // Create new chat button
     // This button will be used to start a new conversation
     // collect user information and initialize the chat interface
-    const newChatBtn = document.getElementById('start-chat-btn');
-    newChatBtn.addEventListener('click', () => {
+    const startChatBtn = document.getElementById('start-chat-btn');
+    startChatBtn.addEventListener('click', () => {
     const firstName = document.getElementById('user-first-name').value.trim();
     const lastName = document.getElementById('user-last-name').value.trim();
     const email = document.getElementById('user-email').value.trim();
