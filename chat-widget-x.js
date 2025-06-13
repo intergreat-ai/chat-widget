@@ -388,7 +388,6 @@
     widgetContainer.appendChild(toggleButton);
     document.body.appendChild(widgetContainer);
 
-    // const newChatBtn = chatContainer.querySelector('.new-chat-btn');
     const startChatBtn = chatContainer.querySelector('#start-chat-btn');
     startChatBtn.addEventListener('click', () => {
     const first = chatContainer.querySelector('#user-first-name').value.trim();
@@ -410,41 +409,7 @@
         return crypto.randomUUID();
     }
 
-    /*async function startNewConversation() {
-        currentSessionId = generateUUID();
-        const data = [{
-            action: "loadPreviousSession",
-            sessionId: currentSessionId,
-            route: config.webhook.route,
-            metadata: {
-                userId: ""
-            }
-        }];
-
-        try {
-            const response = await fetch(config.webhook.url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            });
-
-            const responseData = await response.json();
-            chatContainer.querySelector('.brand-header').style.display = 'none';
-            chatContainer.querySelector('.new-conversation').style.display = 'none';
-            chatInterface.classList.add('active');
-
-            const botMessageDiv = document.createElement('div');
-            botMessageDiv.className = 'chat-message bot';
-            botMessageDiv.textContent = Array.isArray(responseData) ? responseData[0].output : responseData.output;
-            messagesContainer.appendChild(botMessageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    }*/
-
+    /*
     async function startNewConversation() {
         currentSessionId = generateUUID();
         const data = [{
@@ -507,45 +472,86 @@
         } catch (error) {
             console.error('Error:', error);
         }
-    }
+    }*/
+    async function startNewConversation() {
+        currentSessionId = generateUUID();
 
-    /*async function sendMessage(message) {
-        const messageData = {
-            action: "sendMessage",
+        const initData = [{
+            action: "loadPreviousSession",
             sessionId: currentSessionId,
             route: config.webhook.route,
-            chatInput: message,
             metadata: {
-                userId: ""
+            userId: config.userInfo.email,
+            name: `${config.userInfo.firstName} ${config.userInfo.lastName}`,
+            email: config.userInfo.email
             }
-        };
-
-        const userMessageDiv = document.createElement('div');
-        userMessageDiv.className = 'chat-message user';
-        userMessageDiv.textContent = message;
-        messagesContainer.appendChild(userMessageDiv);
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }];
 
         try {
+            // 1. Load previous session
             const response = await fetch(config.webhook.url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(messageData)
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(initData)
             });
-            
-            const data = await response.json();
-            
+            const responseData = await response.json(); // ✅ move here
+
+            // 2. Fire hidden message with metadata
+            await fetch(config.webhook.url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: "sendMessage",
+                sessionId: currentSessionId,
+                route: config.webhook.route,
+                chatInput: "__init__",
+                metadata: {
+                userId: config.userInfo.email,
+                name: `${config.userInfo.firstName} ${config.userInfo.lastName}`,
+                email: config.userInfo.email
+                }
+            })
+            });
+
+            // 3. Show UI
+            chatContainer.querySelector('.brand-header').style.display = 'none';
+            chatContainer.querySelector('.new-conversation').style.display = 'none';
+            chatInterface.classList.add('active');
+
+            const msg = Array.isArray(responseData) ? responseData[0] : responseData;
             const botMessageDiv = document.createElement('div');
             botMessageDiv.className = 'chat-message bot';
-            botMessageDiv.textContent = Array.isArray(data) ? data[0].output : data.output;
+            botMessageDiv.textContent = msg.output || '';
             messagesContainer.appendChild(botMessageDiv);
+
+            // Buttons if needed
+            if (msg.options && Array.isArray(msg.options)) {
+            const buttonWrapper = document.createElement('div');
+            buttonWrapper.style.display = 'flex';
+            buttonWrapper.style.flexWrap = 'wrap';
+            buttonWrapper.style.gap = '8px';
+            buttonWrapper.style.marginTop = '8px';
+
+            msg.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.textContent = opt.label;
+                btn.style.padding = '8px 12px';
+                btn.style.borderRadius = '6px';
+                btn.style.border = '1px solid #ccc';
+                btn.style.background = '#f7f7f7';
+                btn.style.cursor = 'pointer';
+                btn.onclick = () => sendMessage(opt.value);
+                buttonWrapper.appendChild(btn);
+            });
+
+            messagesContainer.appendChild(buttonWrapper);
+            }
+
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         } catch (error) {
             console.error('Error:', error);
         }
-    }*/
+    }
 
     async function sendMessage(message) {
         const messageData = {
