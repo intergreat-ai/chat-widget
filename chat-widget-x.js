@@ -542,7 +542,9 @@
             chatInput: "start",
             metadata: {
             userId: config.userInfo.email,
-            name: `${config.userInfo.firstName} ${config.userInfo.lastName}`,
+            Name: `${config.userInfo.firstName} ${config.userInfo.lastName}`,
+            firstName: config.userInfo.firstName,
+            lastName: config.userInfo.lastName,
             email: config.userInfo.email
             }
         };
@@ -603,6 +605,8 @@
             metadata: {
                 userId: config.userInfo.email,
                 name: `${config.userInfo.firstName} ${config.userInfo.lastName}`,
+                firstName: config.userInfo.firstName,
+                lastName: config.userInfo.lastName,
                 email: config.userInfo.email
             }
         };
