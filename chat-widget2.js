@@ -1,4 +1,3 @@
-// mod-chat-widget.js
 // Chat Widget Script
 (function() {
     // Create and inject styles
@@ -327,7 +326,7 @@
     // Create widget container
     const widgetContainer = document.createElement('div');
     widgetContainer.className = 'n8n-chat-widget';
-
+    
     // Set CSS variables for colors
     widgetContainer.style.setProperty('--n8n-chat-primary-color', config.style.primaryColor);
     widgetContainer.style.setProperty('--n8n-chat-secondary-color', config.style.secondaryColor);
@@ -336,7 +335,7 @@
 
     const chatContainer = document.createElement('div');
     chatContainer.className = `chat-container${config.style.position === 'left' ? ' position-left' : ''}`;
-    // Create HTML structure for new conversation and chat interface
+    
     const newConversationHTML = `
         <div class="brand-header">
             <img src="${config.branding.logo}" alt="${config.branding.name}">
@@ -345,7 +344,11 @@
         </div>
         <div class="new-conversation">
             <h2 class="welcome-text">${config.branding.welcomeText}</h2>
-            <button class="new-chat-btn">
+            <input id="user-first-name" placeholder="First Name" />
+            <input id="user-last-name" placeholder="Last Name" />
+            <input id="user-email" type="email" placeholder="Email" />
+            <p class="response-text">${config.branding.responseTimeText}</p>
+            <button class="new-chat-btn" id="start-chat-btn">
                 <svg class="message-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.2L4 17.2V4h16v12z"/>
                 </svg>
@@ -372,10 +375,9 @@
             </div>
         </div>
     `;
-
-
+    
     chatContainer.innerHTML = newConversationHTML + chatInterfaceHTML;
-    // Create toggle button
+    
     const toggleButton = document.createElement('button');
     toggleButton.className = `chat-toggle${config.style.position === 'left' ? ' position-left' : ''}`;
     toggleButton.innerHTML = `
@@ -388,23 +390,16 @@
     document.body.appendChild(widgetContainer);
 
     // const newChatBtn = chatContainer.querySelector('.new-chat-btn');
-    // Create new chat button
-    // This button will be used to start a new conversation
-    // collect user information and initialize the chat interface
-    const startChatBtn = document.getElementById('start-chat-btn');
+    const startChatBtn = chatContainer.querySelector('#start-chat-btn');
     startChatBtn.addEventListener('click', () => {
-    const firstName = document.getElementById('user-first-name').value.trim();
-    const lastName = document.getElementById('user-last-name').value.trim();
-    const email = document.getElementById('user-email').value.trim();
-
-    if (!firstName || !lastName || !email || !email.includes('@')) {
-        alert("Please complete all fields with valid information.");
+    const first = chatContainer.querySelector('#user-first-name').value.trim();
+    const last = chatContainer.querySelector('#user-last-name').value.trim();
+    const email = chatContainer.querySelector('#user-email').value.trim();
+    if (!first || !last || !email.includes('@')) {
+        alert('Please enter your first name, last name, and a valid email.');
         return;
     }
-
-    // ✅ Store user info for later
-    config.userInfo = { firstName, lastName, email };
-
+    config.userInfo = { firstName: first, lastName: last, email };
     startNewConversation();
     });
     const chatInterface = chatContainer.querySelector('.chat-interface');
@@ -416,9 +411,41 @@
         return crypto.randomUUID();
     }
 
-    // Start a new conversation
-    // This function initializes a new chat session and loads the welcome message
-    // It also sets up the chat interface and handles the initial user interaction
+    /*async function startNewConversation() {
+        currentSessionId = generateUUID();
+        const data = [{
+            action: "loadPreviousSession",
+            sessionId: currentSessionId,
+            route: config.webhook.route,
+            metadata: {
+                userId: ""
+            }
+        }];
+
+        try {
+            const response = await fetch(config.webhook.url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const responseData = await response.json();
+            chatContainer.querySelector('.brand-header').style.display = 'none';
+            chatContainer.querySelector('.new-conversation').style.display = 'none';
+            chatInterface.classList.add('active');
+
+            const botMessageDiv = document.createElement('div');
+            botMessageDiv.className = 'chat-message bot';
+            botMessageDiv.textContent = Array.isArray(responseData) ? responseData[0].output : responseData.output;
+            messagesContainer.appendChild(botMessageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }*/
+
     async function startNewConversation() {
         currentSessionId = generateUUID();
         const data = [{
@@ -426,9 +453,9 @@
             sessionId: currentSessionId,
             route: config.webhook.route,
             metadata: {
-                userId: config.userInfo?.email || "",
-                name: `${config.userInfo?.firstName || ""} ${config.userInfo?.lastName || ""}`,
-                email: config.userInfo?.email || ""
+                userId: config.userInfo.email,
+                name: `${config.userInfo.firstName} ${config.userInfo.lastName}`,
+                email: config.userInfo.email
             }
         }];
 
@@ -483,8 +510,44 @@
         }
     }
 
-    // Send a message to the bot
-    // This function handles sending user messages to the bot and displaying the bot's response
+    /*async function sendMessage(message) {
+        const messageData = {
+            action: "sendMessage",
+            sessionId: currentSessionId,
+            route: config.webhook.route,
+            chatInput: message,
+            metadata: {
+                userId: ""
+            }
+        };
+
+        const userMessageDiv = document.createElement('div');
+        userMessageDiv.className = 'chat-message user';
+        userMessageDiv.textContent = message;
+        messagesContainer.appendChild(userMessageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        try {
+            const response = await fetch(config.webhook.url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(messageData)
+            });
+            
+            const data = await response.json();
+            
+            const botMessageDiv = document.createElement('div');
+            botMessageDiv.className = 'chat-message bot';
+            botMessageDiv.textContent = Array.isArray(data) ? data[0].output : data.output;
+            messagesContainer.appendChild(botMessageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }*/
+
     async function sendMessage(message) {
         const messageData = {
             action: "sendMessage",
@@ -492,9 +555,9 @@
             route: config.webhook.route,
             chatInput: message,
             metadata: {
-                userId: config.userInfo?.email || "",
-                name: `${config.userInfo?.firstName || ""} ${config.userInfo?.lastName || ""}`,
-                email: config.userInfo?.email || ""
+                userId: config.userInfo.email,
+                name: `${config.userInfo.firstName} ${config.userInfo.lastName}`,
+                email: config.userInfo.email
             }
         };
 
@@ -552,7 +615,7 @@
         }
     }
 
-    newChatBtn.addEventListener('click', startNewConversation);
+    // newChatBtn.addEventListener('click', startNewConversation);
     
     sendButton.addEventListener('click', () => {
         const message = textarea.value.trim();
