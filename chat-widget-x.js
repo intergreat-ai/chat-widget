@@ -451,9 +451,9 @@
 
             const form = chatContainer.querySelector('.new-conversation');
             form.insertBefore(error, form.querySelector('p.response-text'));
-            /*setTimeout(() => {
+            setTimeout(() => {
                 error.remove();
-            }, 6000);*/
+            }, 6000);
             return;
         }
         config.userInfo = { firstName: first, lastName: last, email };
