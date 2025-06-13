@@ -189,7 +189,7 @@
             display: block;
             width: 100%;
             box-sizing: border-box;
-            padding: 12px;
+            padding: 16px 24px; /* match button */
             border: 1px solid rgba(133, 79, 255, 0.2);
             border-radius: 8px;
             background: var(--chat--color-background);
