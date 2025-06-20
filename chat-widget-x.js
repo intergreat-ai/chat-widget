@@ -534,6 +534,7 @@
     }*/
     async function startNewConversation() {
         currentSessionId = generateUUID();
+        console.log("CONFIG DEBUG:", config);
 
         const messageData = {
             action: "sendMessage",
@@ -546,7 +547,7 @@
             firstName: config.userInfo.firstName,
             lastName: config.userInfo.lastName,
             email: config.userInfo.email,
-            source: config.siteInfo.source
+            source: (config && config.siteInfo && config.siteInfo.source) || 'unspecified'
             }
         };
 
@@ -598,6 +599,7 @@
     }
 
     async function sendMessage(message) {
+        console.log("CONFIG DEBUG:", config);
         const messageData = {
             action: "sendMessage",
             sessionId: currentSessionId,
@@ -609,7 +611,7 @@
                 firstName: config.userInfo.firstName,
                 lastName: config.userInfo.lastName,
                 email: config.userInfo.email,
-                source: config.siteInfo.source
+                source: (config && config.siteInfo && config.siteInfo.source) || 'unspecified'
             }
         };
 
