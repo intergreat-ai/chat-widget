@@ -326,8 +326,8 @@
             welcomeText: '',
             responseTimeText: '',
             poweredBy: {
-                text: 'Powered by n8n',
-                link: 'https://n8n.partnerlinks.io/m8a94i19zhqq?utm_source=nocodecreative.io'
+                text: 'Powered by intergreat.ai',
+                link: 'https://www.intergreat.ai/'
             }
         },
         style: {
@@ -546,7 +546,7 @@
             firstName: config.userInfo.firstName,
             lastName: config.userInfo.lastName,
             email: config.userInfo.email,
-            source: config.siteInfo.source || 'unspecified'
+            source: config.siteInfo.source
             }
         };
 
@@ -609,7 +609,7 @@
                 firstName: config.userInfo.firstName,
                 lastName: config.userInfo.lastName,
                 email: config.userInfo.email,
-                source: config.siteInfo.source || 'unspecified'
+                source: config.siteInfo.source
             }
         };
 
