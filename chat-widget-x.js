@@ -545,7 +545,8 @@
             Name: `${config.userInfo.firstName} ${config.userInfo.lastName}`,
             firstName: config.userInfo.firstName,
             lastName: config.userInfo.lastName,
-            email: config.userInfo.email
+            email: config.userInfo.email,
+            source: config.siteInfo.source || 'unspecified'
             }
         };
 
@@ -607,7 +608,8 @@
                 name: `${config.userInfo.firstName} ${config.userInfo.lastName}`,
                 firstName: config.userInfo.firstName,
                 lastName: config.userInfo.lastName,
-                email: config.userInfo.email
+                email: config.userInfo.email,
+                source: config.siteInfo.source || 'unspecified'
             }
         };
 
