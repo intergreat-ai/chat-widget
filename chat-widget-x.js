@@ -344,7 +344,9 @@
         {
             webhook: { ...defaultConfig.webhook, ...window.ChatWidgetConfig.webhook },
             branding: { ...defaultConfig.branding, ...window.ChatWidgetConfig.branding },
-            style: { ...defaultConfig.style, ...window.ChatWidgetConfig.style }
+            style: { ...defaultConfig.style, ...window.ChatWidgetConfig.style },
+            siteInfo: { ...window.ChatWidgetConfig.siteInfo },
+            userInfo: { ...window.ChatWidgetConfig.userInfo } || {}
         } : defaultConfig;
 
     // Prevent multiple initializations
