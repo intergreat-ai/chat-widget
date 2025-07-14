@@ -1,32 +1,4 @@
-// Chat Widget Script with Conditional Fields and button options
-/*
-For sites WITH user info fields (current behavior):
-html<script>
-window.ChatWidgetConfig = {
-    // ... your existing config
-    fields: {
-        showFirstName: true,
-        showLastName: true,
-        showEmail: true
-    }
-};
-</script>
-<script src="url here"></script>
-For sites WITHOUT user info fields:
-html<script>
-window.ChatWidgetConfig = {
-    // ... your existing config
-    fields: {
-        showFirstName: false,
-        showLastName: false,
-        showEmail: false
-    }
-};
-</script>
-<script src="url here"></script>
-
-*/
-
+// Chat Widget Script with Conditional Fields
 (function() {
     // Create and inject styles
     const styles = `
@@ -381,12 +353,12 @@ window.ChatWidgetConfig = {
     // Merge user config with defaults
     const config = window.ChatWidgetConfig ? 
         {
-            webhook: { ...defaultConfig.webhook, ...window.ChatWidgetConfig.webhook },
-            branding: { ...defaultConfig.branding, ...window.ChatWidgetConfig.branding },
-            style: { ...defaultConfig.style, ...window.ChatWidgetConfig.style },
-            fields: { ...defaultConfig.fields, ...window.ChatWidgetConfig.fields },
-            siteInfo: { ...window.ChatWidgetConfig.siteInfo },
-            userInfo: { ...window.ChatWidgetConfig.userInfo } || {}
+            webhook: { ...defaultConfig.webhook, ...(window.ChatWidgetConfig.webhook || {}) },
+            branding: { ...defaultConfig.branding, ...(window.ChatWidgetConfig.branding || {}) },
+            style: { ...defaultConfig.style, ...(window.ChatWidgetConfig.style || {}) },
+            fields: { ...defaultConfig.fields, ...(window.ChatWidgetConfig.fields || {}) },
+            siteInfo: { ...(window.ChatWidgetConfig.siteInfo || {}) },
+            userInfo: { ...(window.ChatWidgetConfig.userInfo || {}) }
         } : defaultConfig;
 
     // Prevent multiple initializations
@@ -408,17 +380,23 @@ window.ChatWidgetConfig = {
     const chatContainer = document.createElement('div');
     chatContainer.className = `chat-container${config.style.position === 'left' ? ' position-left' : ''}`;
     
+    // Debug logging
+    console.log('Chat Widget Config:', config);
+    console.log('Fields config:', config.fields);
+    
     // Build form fields based on configuration
     let formFields = '';
-    if (config.fields.showFirstName) {
+    if (config.fields && config.fields.showFirstName !== false) {
         formFields += '<input id="user-first-name" class="chat-text-input" placeholder="First Name" />';
     }
-    if (config.fields.showLastName) {
+    if (config.fields && config.fields.showLastName !== false) {
         formFields += '<input id="user-last-name" class="chat-text-input" placeholder="Last Name" />';
     }
-    if (config.fields.showEmail) {
+    if (config.fields && config.fields.showEmail !== false) {
         formFields += '<input id="user-email" type="email" class="chat-text-input" placeholder="Email" />';
     }
+    
+    console.log('Generated form fields:', formFields);
 
     const newConversationHTML = `
         <div class="brand-header">
@@ -480,7 +458,7 @@ window.ChatWidgetConfig = {
         const userData = {};
         let validationError = false;
         
-        if (config.fields.showFirstName) {
+        if (config.fields && config.fields.showFirstName !== false) {
             const firstNameEl = chatContainer.querySelector('#user-first-name');
             const firstName = firstNameEl ? firstNameEl.value.trim() : '';
             if (!firstName) {
@@ -490,7 +468,7 @@ window.ChatWidgetConfig = {
             }
         }
         
-        if (config.fields.showLastName) {
+        if (config.fields && config.fields.showLastName !== false) {
             const lastNameEl = chatContainer.querySelector('#user-last-name');
             const lastName = lastNameEl ? lastNameEl.value.trim() : '';
             if (!lastName) {
@@ -500,7 +478,7 @@ window.ChatWidgetConfig = {
             }
         }
         
-        if (config.fields.showEmail) {
+        if (config.fields && config.fields.showEmail !== false) {
             const emailEl = chatContainer.querySelector('#user-email');
             const email = emailEl ? emailEl.value.trim() : '';
             if (!email || !email.includes('@')) {
@@ -511,7 +489,9 @@ window.ChatWidgetConfig = {
         }
         
         // If no fields are required (all hidden), proceed directly
-        const hasVisibleFields = config.fields.showFirstName || config.fields.showLastName || config.fields.showEmail;
+        const hasVisibleFields = (config.fields && config.fields.showFirstName !== false) || 
+                                (config.fields && config.fields.showLastName !== false) || 
+                                (config.fields && config.fields.showEmail !== false);
         
         if (hasVisibleFields && validationError) {
             const error = document.createElement('div');
