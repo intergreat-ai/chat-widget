@@ -181,6 +181,32 @@
             animation: messageSlideIn 0.3s ease-out forwards;
         }
 
+        .n8n-chat-widget .chat-message a {
+            color: var(--chat--color-primary);
+            text-decoration: underline;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .n8n-chat-widget .chat-message a:hover {
+            color: var(--chat--color-secondary);
+            text-decoration: none;
+            background-color: rgba(133, 79, 255, 0.1);
+            padding: 2px 4px;
+            border-radius: 4px;
+            margin: -2px -4px;
+        }
+
+        .n8n-chat-widget .chat-message.user a {
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: underline;
+        }
+
+        .n8n-chat-widget .chat-message.user a:hover {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
         @keyframes messageSlideIn {
             to {
                 opacity: 1;
@@ -629,6 +655,30 @@
         return chunks;
     }
 
+    // URL detection and linking function
+    function linkifyText(text) {
+        // Enhanced URL regex that handles various URL formats
+        const urlRegex = /(https?:\/\/[^\s<>"{}|\\^`[\]]+|www\.[^\s<>"{}|\\^`[\]]+)/gi;
+        
+        return text.replace(urlRegex, (url) => {
+            let href = url;
+            // Add protocol if missing
+            if (url.startsWith('www.')) {
+                href = 'https://' + url;
+            }
+            
+            // Create clean display text (remove protocol for display)
+            let displayText = url;
+            if (url.startsWith('https://')) {
+                displayText = url.substring(8);
+            } else if (url.startsWith('http://')) {
+                displayText = url.substring(7);
+            }
+            
+            return `<a href="${href}" target="_blank" rel="noopener noreferrer">${displayText}</a>`;
+        });
+    }
+
     // Enhanced message display function
     async function displayBotMessage(message, options = null, delay = 0) {
         if (delay > 0) {
@@ -657,7 +707,11 @@
 
             const botMessageDiv = document.createElement('div');
             botMessageDiv.className = 'chat-message bot';
-            botMessageDiv.textContent = chunk;
+            
+            // Process text for URLs and line breaks, then set as HTML
+            const processedText = linkifyText(chunk);
+            botMessageDiv.innerHTML = processedText;
+            
             messagesContainer.appendChild(botMessageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
