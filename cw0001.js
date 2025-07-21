@@ -719,12 +719,22 @@
             metadata: metadata
         };
 
-        try {
-            // Switch to chat interface immediately
-            chatContainer.querySelector('.brand-header').style.display = 'none';
-            chatContainer.querySelector('.new-conversation').style.display = 'none';
-            chatInterface.classList.add('active');
+        // Switch to chat interface immediately
+        chatContainer.querySelector('.brand-header').style.display = 'none';
+        chatContainer.querySelector('.new-conversation').style.display = 'none';
+        chatInterface.classList.add('active');
 
+        // Show typing indicator immediately (before API call)
+        let typingElement;
+        if (config.ux.typingDelay > 0) {
+            setTimeout(() => {
+                typingElement = showTypingIndicator();
+            }, config.ux.typingDelay);
+        } else {
+            typingElement = showTypingIndicator();
+        }
+
+        try {
             const response = await fetch(config.webhook.url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -734,12 +744,26 @@
             const data = await response.json();
             const msg = Array.isArray(data) ? data[0] : data;
 
-            // Display the message with enhanced UX
-            await displayBotMessage(msg.output || '', msg.options, config.ux.typingDelay);
+            // Hide typing indicator and display the message
+            hideTypingIndicator(typingElement);
+            
+            // Wait a moment to ensure smooth transition
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+            // Display the message (no additional typing delay since we already showed it)
+            await displayBotMessage(msg.output || '', msg.options, 0);
 
         } catch (error) {
             console.error('Error:', error);
-            hideTypingIndicator();
+            hideTypingIndicator(typingElement);
+            
+            // Show error message to user
+            const errorMessageDiv = document.createElement('div');
+            errorMessageDiv.className = 'chat-message bot';
+            errorMessageDiv.textContent = 'Sorry, I encountered an error connecting. Please try again.';
+            errorMessageDiv.style.color = '#e74c3c';
+            messagesContainer.appendChild(errorMessageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
     }
 
@@ -780,6 +804,16 @@
         messagesContainer.appendChild(userMessageDiv);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
+        // Show typing indicator immediately (before API call)
+        let typingElement;
+        if (config.ux.typingDelay > 0) {
+            setTimeout(() => {
+                typingElement = showTypingIndicator();
+            }, config.ux.typingDelay);
+        } else {
+            typingElement = showTypingIndicator();
+        }
+
         try {
             const response = await fetch(config.webhook.url, {
                 method: 'POST',
@@ -792,12 +826,26 @@
             const data = await response.json();
             const msg = Array.isArray(data) ? data[0] : data;
 
-            // Display bot response with enhanced UX
-            await displayBotMessage(msg.output || '', msg.options, config.ux.typingDelay);
+            // Hide typing indicator and display bot response
+            hideTypingIndicator(typingElement);
+            
+            // Wait a moment to ensure smooth transition
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+            // Display bot response (no additional typing delay since we already showed it)
+            await displayBotMessage(msg.output || '', msg.options, 0);
 
         } catch (error) {
             console.error('Error:', error);
-            hideTypingIndicator();
+            hideTypingIndicator(typingElement);
+            
+            // Show error message to user
+            const errorMessageDiv = document.createElement('div');
+            errorMessageDiv.className = 'chat-message bot';
+            errorMessageDiv.textContent = 'Sorry, I encountered an error. Please try again.';
+            errorMessageDiv.style.color = '#e74c3c';
+            messagesContainer.appendChild(errorMessageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
     }
     
