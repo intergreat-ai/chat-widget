@@ -430,6 +430,16 @@
             opacity: 0.8;
             transform: scale(0.98);
         }
+
+        .n8n-chat-widget .message-buttons button:disabled {
+            cursor: not-allowed !important;
+            opacity: 0.6;
+        }
+
+        .n8n-chat-widget .message-buttons button:disabled:hover {
+            transform: none !important;
+            box-shadow: 0 2px 8px rgba(166, 152, 86, 0.2) !important;
+        }
     `;
 
     // Load Geist font
@@ -729,28 +739,24 @@
                 const btn = document.createElement('button');
                 btn.textContent = opt.label;
                 btn.onclick = () => {
+                    // Check if any button in this wrapper is already selected
+                    if (buttonWrapper.querySelector('button.selected')) {
+                        return; // Prevent any further clicks
+                    }
+                    
                     // Show selection feedback like in demo
                     const originalText = btn.textContent;
                     btn.classList.add('selected');
                     btn.textContent = 'Selected ✓';
                     
-                    // Disable all buttons in this wrapper to prevent multiple clicks
+                    // Permanently disable all buttons in this wrapper
                     buttonWrapper.querySelectorAll('button').forEach(button => {
                         button.disabled = true;
-                        button.style.cursor = 'not-allowed';
                     });
                     
                     setTimeout(() => {
-                        btn.classList.remove('selected');
-                        btn.textContent = originalText;
-                        
-                        // Re-enable buttons temporarily before sending message
-                        buttonWrapper.querySelectorAll('button').forEach(button => {
-                            button.disabled = false;
-                            button.style.cursor = 'pointer';
-                        });
-                        
-                        // Send the message
+                        // Keep the selected button showing "Selected ✓" 
+                        // and send the message
                         sendMessage(opt.value);
                     }, 1500);
                 };
