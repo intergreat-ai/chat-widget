@@ -405,7 +405,6 @@
             flex-direction: column;
             gap: 8px;
             margin-top: 12px;
-            animation: messageSlideIn 0.3s ease-out forwards;
         }
 
         .n8n-chat-widget .message-buttons button {
@@ -425,6 +424,11 @@
         .n8n-chat-widget .message-buttons button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(166, 152, 86, 0.4);
+        }
+
+        .n8n-chat-widget .message-buttons button.selected {
+            opacity: 0.8;
+            transform: scale(0.98);
         }
     `;
 
@@ -725,14 +729,42 @@
                 const btn = document.createElement('button');
                 btn.textContent = opt.label;
                 btn.onclick = () => {
-                    // Remove all button options when one is clicked
-                    document.querySelectorAll('.message-buttons').forEach(wrapper => wrapper.remove());
-                    sendMessage(opt.value);
+                    // Show selection feedback like in demo
+                    const originalText = btn.textContent;
+                    btn.classList.add('selected');
+                    btn.textContent = 'Selected ✓';
+                    
+                    // Disable all buttons in this wrapper to prevent multiple clicks
+                    buttonWrapper.querySelectorAll('button').forEach(button => {
+                        button.disabled = true;
+                        button.style.cursor = 'not-allowed';
+                    });
+                    
+                    setTimeout(() => {
+                        btn.classList.remove('selected');
+                        btn.textContent = originalText;
+                        
+                        // Re-enable buttons temporarily before sending message
+                        buttonWrapper.querySelectorAll('button').forEach(button => {
+                            button.disabled = false;
+                            button.style.cursor = 'pointer';
+                        });
+                        
+                        // Send the message
+                        sendMessage(opt.value);
+                    }, 1500);
                 };
                 buttonWrapper.appendChild(btn);
             });
 
-            messagesContainer.appendChild(buttonWrapper);
+            // Add buttons INSIDE the last bot message instead of as separate element
+            const lastBotMessage = messagesContainer.querySelector('.chat-message.bot:last-child');
+            if (lastBotMessage) {
+                lastBotMessage.appendChild(buttonWrapper);
+            } else {
+                messagesContainer.appendChild(buttonWrapper);
+            }
+            
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
         }
     }
