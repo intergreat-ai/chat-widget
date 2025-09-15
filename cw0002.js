@@ -852,7 +852,7 @@
             // Show error message to user
             const errorMessageDiv = document.createElement('div');
             errorMessageDiv.className = 'chat-message bot';
-            errorMessageDiv.textContent = 'Sorry, I encountered an error connecting. Please try again.';
+            errorMessageDiv.textContent = 'Sorry, I’m not able to answer that question. Can you please give us a call on (323) 310-4700 so we can chat through it.';
             errorMessageDiv.style.color = '#e74c3c';
             messagesContainer.appendChild(errorMessageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -934,7 +934,7 @@
             // Show error message to user
             const errorMessageDiv = document.createElement('div');
             errorMessageDiv.className = 'chat-message bot';
-            errorMessageDiv.textContent = 'Sorry, I encountered an error. Please try again.';
+            errorMessageDiv.textContent = 'Sorry, I’m not able to answer that question. Can you please give us a call on (323) 310-4700 so we can chat through it.';
             errorMessageDiv.style.color = '#e74c3c';
             messagesContainer.appendChild(errorMessageDiv);
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
