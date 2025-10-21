@@ -154,7 +154,7 @@
         /* ---------- NEW: XXL Clean Minimal Launcher ---------- */
         .n8n-chat-widget .savoir-fixed{
             position:fixed; right:32px; bottom:32px;
-            pointer-events:none; z-index:2147483000;
+            pointer-events:auto; z-index:2147483000;
             display:block; width:auto; height:auto;
         }
         .n8n-chat-widget .savoir-fixed.left{ right:auto; left:32px; }
@@ -338,6 +338,27 @@
         widgetContainer.appendChild(savoirRoot);
         // Hide the default small toggle when XXL is enabled
         toggleButton.style.display = 'none';
+
+        // CLICK -> open chat
+        if (savoirBtn)  savoirBtn.addEventListener('click', openChat);
+        if (savoirPill) savoirPill.addEventListener('click', openChat);
+
+        // Start phrases
+        if (savoirPill) {
+            const phrases = Array.isArray(cfg.launcher.phrases) && cfg.launcher.phrases.length
+            ? cfg.launcher.phrases
+            : ['Hello, I’m Savoir', 'I’m here to help'];
+            let i = 0;
+            savoirPill.textContent = phrases[0];
+            setInterval(() => {
+            savoirPill.style.opacity = '0';
+            setTimeout(() => {
+                i = (i + 1) % phrases.length;
+                savoirPill.textContent = phrases[i];
+                savoirPill.style.opacity = '1';
+            }, 160);
+            }, 3500);
+        }
     }
 
     // Grab core DOM
@@ -348,10 +369,19 @@
     const sendButton = chatContainer.querySelector('button[type="submit"]');
 
     // ---------- PUBLIC API ----------
-    function openChat() {
+    /*function openChat() {
         chatContainer.classList.add('open');
         if (savoirRoot) savoirRoot.setAttribute('data-state', 'open');
         setTimeout(() => textarea && textarea.focus(), 300);
+        window.dispatchEvent(new CustomEvent('ChatWidget:open'));
+    }*/
+    function openChat() {
+        chatContainer.classList.add('open');
+        if (savoirRoot) savoirRoot.setAttribute('data-state', 'open');
+        setTimeout(() => {
+            const ta = chatContainer.querySelector('textarea');
+            if (ta) ta.focus();
+        }, 300);
         window.dispatchEvent(new CustomEvent('ChatWidget:open'));
     }
     function closeChat() {
@@ -382,8 +412,8 @@
             }, 160);
         }, 3500);
     }
-    if (savoirBtn)  savoirBtn.addEventListener('click', openChat);
-    if (savoirPill) savoirPill.addEventListener('click', openChat);
+    // if (savoirBtn)  savoirBtn.addEventListener('click', openChat);
+    // if (savoirPill) savoirPill.addEventListener('click', openChat);
 
     // ---------- EXISTING TYPING / MESSAGE LOGIC (unchanged) ----------
     function showTypingIndicator() {
@@ -559,8 +589,8 @@
         startNewConversation();
     });
 
-    sendButton = chatContainer.querySelector('button[type="submit"]');
-    textarea = chatContainer.querySelector('textarea');
+    // sendButton = chatContainer.querySelector('button[type="submit"]');
+    // textarea = chatContainer.querySelector('textarea');
 
     sendButton.addEventListener('click', () => {
         if (isTyping) return;
