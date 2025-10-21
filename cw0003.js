@@ -341,7 +341,7 @@
     }
 
     // Grab core DOM
-    const startChatBtn = chatContainer.querySelector('#start-chat-btn');
+    startChatBtn = chatContainer.querySelector('#start-chat-btn');
     const chatInterface = chatContainer.querySelector('.chat-interface');
     const messagesContainer = chatContainer.querySelector('.chat-messages');
     const textarea = chatContainer.querySelector('textarea');
@@ -559,8 +559,8 @@
         startNewConversation();
     });
 
-    const sendButton = chatContainer.querySelector('button[type="submit"]');
-    const textarea = chatContainer.querySelector('textarea');
+    sendButton = chatContainer.querySelector('button[type="submit"]');
+    textarea = chatContainer.querySelector('textarea');
 
     sendButton.addEventListener('click', () => {
         if (isTyping) return;
