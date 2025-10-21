@@ -176,51 +176,72 @@
         }
         .n8n-chat-widget .chat-widget-xxl svg{ width:36px; height:36px; fill:currentColor; }
 
-        /*
+        /* XXL pill — final */
         .n8n-chat-widget .savoir-pill{
-            pointer-events:auto; position:absolute;
-            right:112px; /* 100 + 12 gap */
-            bottom:26px; /* optically centered to circle */
-            background:#fff; color:#333; padding:14px 18px;
-            border-radius:18px; border-bottom-right-radius:4px;
-            box-shadow:0 2px 12px rgba(0,0,0,.15);
-            font-size:15px; font-weight:600; line-height:1.3;
-            max-width:240px; border:1px solid rgba(0,0,0,.1);
-            opacity:1; transition:opacity .2s ease;
-        }
-        */
-        /* Fix pill sizing & wrapping (single line) */
-        .n8n-chat-widget .savoir-pill{
-        display: inline-flex;          /* keep height tidy */
-        align-items: center;           /* vertical align text */
-        white-space: nowrap;           /* no line breaks */
-        max-width: none;               /* let it grow with text */
-        padding: 12px 16px;            /* slightly tighter so tail looks centered */
-        line-height: 1.25;             /* keep rounded shape clean */
+            /* position & hit-testing */
+            position: absolute;
+            pointer-events: auto;
+
+            /* place to the left of the XXL circle (100px) with 12px gap */
+            right: 112px;
+            bottom: 26px;
+
+            /* visual */
+            background: #fff;
+            color: #333;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 18px;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+
+            /* type & spacing */
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 1.25;
+            padding: 12px 16px;
+
+            /* make it one line and vertically centered */
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+
+            /* fade used by your phrase rotator */
+            opacity: 1;
+            transition: opacity .2s ease;
         }
 
-        /* keep tail centered even as height changes */
-        .n8n-chat-widget .savoir-pill::after,
-        .n8n-chat-widget .savoir-pill::before{
-        top: 50%;
-        transform: translateY(-50%);
+        /* keep tail centered */
+            .n8n-chat-widget .savoir-pill::after,
+            .n8n-chat-widget .savoir-pill::before{
+            top: 50%;
+            transform: translateY(-50%);
         }
 
-        /* (Optional) allow wrapping on very small screens */
-        @media (max-width: 480px){
-        .n8n-chat-widget .savoir-pill{
-            white-space: normal;
-            max-width: 70vw;
-        }
-        }
         .n8n-chat-widget .savoir-pill::after{
-            content:''; position:absolute; top:50%; right:-7px; transform:translateY(-50%);
-            border-top:8px solid transparent; border-bottom:8px solid transparent; border-left:8px solid #fff;
+            content:'';
+            position:absolute;
+            right:-7px;
+            border-top:8px solid transparent;
+            border-bottom:8px solid transparent;
+            border-left:8px solid #fff;
         }
+
         .n8n-chat-widget .savoir-pill::before{
-            content:''; position:absolute; top:50%; right:-8px; transform:translateY(-50%);
-            border-top:9px solid transparent; border-bottom:9px solid transparent; border-left:9px solid rgba(0,0,0,.1);
+            content:'';
+            position:absolute;
+            right:-8px;
+            border-top:9px solid transparent;
+            border-bottom:9px solid transparent;
+            border-left:9px solid rgba(0,0,0,0.1);
             z-index:-1;
+        }
+
+        /* optional: allow wrapping on very small screens */
+        @media (max-width: 480px){
+            .n8n-chat-widget .savoir-pill{
+                white-space: normal;
+                max-width: 70vw;
+            }
         }
     `;
 
