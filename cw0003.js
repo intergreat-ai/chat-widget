@@ -37,6 +37,7 @@
         }
 
         .n8n-chat-widget .chat-container {
+            pointer-events: auto;
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -362,7 +363,7 @@
     }
 
     // Grab core DOM
-    startChatBtn = chatContainer.querySelector('#start-chat-btn');
+    const startChatBtn = chatContainer.querySelector('#start-chat-btn');
     const chatInterface = chatContainer.querySelector('.chat-interface');
     const messagesContainer = chatContainer.querySelector('.chat-messages');
     const textarea = chatContainer.querySelector('textarea');
@@ -556,7 +557,7 @@
     }
 
     // Event handlers
-    const startChatBtn = chatContainer.querySelector('#start-chat-btn');
+    // const startChatBtn = chatContainer.querySelector('#start-chat-btn');
     startChatBtn.addEventListener('click', () => {
         const errBox = chatContainer.querySelector('.chat-error'); if (errBox) errBox.remove();
         const userData = {}; let validationError = false;
