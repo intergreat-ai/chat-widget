@@ -176,6 +176,7 @@
         }
         .n8n-chat-widget .chat-widget-xxl svg{ width:36px; height:36px; fill:currentColor; }
 
+        /*
         .n8n-chat-widget .savoir-pill{
             pointer-events:auto; position:absolute;
             right:112px; /* 100 + 12 gap */
@@ -186,6 +187,31 @@
             font-size:15px; font-weight:600; line-height:1.3;
             max-width:240px; border:1px solid rgba(0,0,0,.1);
             opacity:1; transition:opacity .2s ease;
+        }
+        */
+        /* Fix pill sizing & wrapping (single line) */
+        .n8n-chat-widget .savoir-pill{
+        display: inline-flex;          /* keep height tidy */
+        align-items: center;           /* vertical align text */
+        white-space: nowrap;           /* no line breaks */
+        max-width: none;               /* let it grow with text */
+        padding: 12px 16px;            /* slightly tighter so tail looks centered */
+        line-height: 1.25;             /* keep rounded shape clean */
+        }
+
+        /* keep tail centered even as height changes */
+        .n8n-chat-widget .savoir-pill::after,
+        .n8n-chat-widget .savoir-pill::before{
+        top: 50%;
+        transform: translateY(-50%);
+        }
+
+        /* (Optional) allow wrapping on very small screens */
+        @media (max-width: 480px){
+        .n8n-chat-widget .savoir-pill{
+            white-space: normal;
+            max-width: 70vw;
+        }
         }
         .n8n-chat-widget .savoir-pill::after{
             content:''; position:absolute; top:50%; right:-7px; transform:translateY(-50%);
